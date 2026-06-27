@@ -1,4 +1,4 @@
-package com.example.islamicapp.ui.data
+package com.example.islamicapp.data
 
 val ayahHomeScreen = listOf(
     "إِنَّ مَعَ الْعُسْرِ يُسْرًا (الشرح: 6)",

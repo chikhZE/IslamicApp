@@ -16,50 +16,44 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.islamicapp.ui.data.ayahHomeScreen
-import com.example.islamicapp.ui.data.duaHomeScreen
-import com.example.islamicapp.ui.data.hadithHomeScreen
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.islamicapp.data.ayahHomeScreen
+import com.example.islamicapp.data.duaHomeScreen
+import com.example.islamicapp.data.hadithHomeScreen
 import com.example.islamicapp.ui.theme.FirstColor
 import com.example.islamicapp.ui.theme.SecondColor
 
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    modifier: Modifier = Modifier
+) {
     val currentDayOfYear = java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_YEAR)
     val currentAyah by rememberSaveable { mutableStateOf(ayahHomeScreen[kotlin.random.Random(currentDayOfYear).nextInt(ayahHomeScreen.size)]) }
     val currentHadith by rememberSaveable { mutableStateOf(hadithHomeScreen[kotlin.random.Random(currentDayOfYear+1).nextInt(hadithHomeScreen.size)]) }
     val currentDuaa by rememberSaveable { mutableStateOf(duaHomeScreen[kotlin.random.Random(currentDayOfYear+2).nextInt(duaHomeScreen.size)]) }
 
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        Scaffold(
-            bottomBar = {
-                BottomNavigationBar()
-            },
-        ) { innerPadding ->
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
                     .padding(16.dp),
             ) {
@@ -69,7 +63,7 @@ fun HomeScreen() {
                     text = "الجامع الإسلامي",
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
-                    color = FirstColor,
+                    color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.fillMaxWidth()
                 )
                 
@@ -102,8 +96,8 @@ fun HomeScreen() {
                     content = currentDuaa
                 )
             }
-        }
-    }
+
+
 }
 
 @Composable
@@ -135,14 +129,18 @@ fun InfoCard(title: String, content: String) {
     }
 }
 @Composable
-fun BottomNavigationBar() {
+fun BottomNavigationBar(
+    navController: NavHostController
+) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
     NavigationBar(
         containerColor = FirstColor,
         tonalElevation = 8.dp
     ) {
         NavigationBarItem(
             selected = false,
-            onClick = { },
+            onClick = {},
             icon = { Icon(Icons.Default.Settings, contentDescription = null, tint = Color.White) },
             label = { Text("الإعدادات", color = Color.White, fontSize = 10.sp) },
             colors = NavigationBarItemDefaults.colors(
@@ -150,8 +148,15 @@ fun BottomNavigationBar() {
             )
         )
         NavigationBarItem(
-            selected = false,
-            onClick = { },
+            selected = currentRoute == "adkar_screen",
+            onClick = {
+                if(currentRoute != "adkar_screen") {
+                    navController.navigate("adkar_screen"){
+                        popUpTo("home_screen") { inclusive = false }
+                        launchSingleTop = true
+                    }
+                }
+            },
             icon = { Icon(Icons.Default.Favorite, contentDescription = null, tint = Color.White) },
             label = { Text("الأدعية", color = Color.White, fontSize = 10.sp) },
             colors = NavigationBarItemDefaults.colors(
@@ -168,8 +173,15 @@ fun BottomNavigationBar() {
             )
         )
         NavigationBarItem(
-            selected = true,
-            onClick = { },
+            selected = currentRoute == "home_screen",
+            onClick = {
+                if(currentRoute != "home_screen") {
+                    navController.navigate("home_screen"){
+                        popUpTo("home_screen") { inclusive = false }
+                        launchSingleTop = true
+                    }
+                }
+            },
             icon = { Icon(Icons.Default.Home, contentDescription = null, tint = Color.White) },
             label = { Text("الرئيسية", color = Color.White, fontSize = 10.sp) },
             colors = NavigationBarItemDefaults.colors(
