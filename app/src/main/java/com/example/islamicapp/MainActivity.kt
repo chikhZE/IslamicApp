@@ -8,14 +8,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.islamicapp.data.AdkarViewModel
 import com.example.islamicapp.ui.AdkarScreen
 import com.example.islamicapp.ui.BottomNavigationBar
+import com.example.islamicapp.ui.DikrScreen
 import com.example.islamicapp.ui.HomeScreen
 import com.example.islamicapp.ui.theme.IslamicAppTheme
 
@@ -25,19 +29,21 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             IslamicAppTheme {
-                App()
+                myApp()
             }
         }
     }
 }
 
 @Composable
-fun App() {
+fun myApp() {
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Scaffold(
             bottomBar = {
-                BottomNavigationBar(navController)
+                if(currentRoute != "dikr_screen") BottomNavigationBar(navController)
             }
         ) { innerPadding ->
             NavHost(
@@ -51,6 +57,13 @@ fun App() {
                 }
                 composable("adkar_screen") {
                     AdkarScreen(
+                        navController,
+                        Modifier.padding(innerPadding)
+                    )
+
+                }
+                composable("dikr_screen") {
+                    DikrScreen(
                         Modifier.padding(innerPadding)
                     )
                 }
