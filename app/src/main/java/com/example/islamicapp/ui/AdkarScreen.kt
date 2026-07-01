@@ -1,6 +1,7 @@
 package com.example.islamicapp.ui
 
 import android.graphics.drawable.Icon
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -82,7 +83,6 @@ fun AdkarScreen(
                     navController,
                     categoryName,
                     matchingIcon,
-                    Modifier.clickable(){}
                 )
             }
         }
@@ -92,9 +92,9 @@ fun AdkarScreen(
 @Composable
 fun AdkarItem(
     navController: NavHostController,
-    title: String,
+    title: String = "أذكار الصباح",
     icon: ImageVector,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier
@@ -102,7 +102,8 @@ fun AdkarItem(
             .height(64.dp)
             .padding(1.dp)
             .clickable(true) {
-                navController.navigate("dikr_screen")
+                val encodedTitle = Uri.encode(title)
+                navController.navigate("dikr_screen/$encodedTitle")
             },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),

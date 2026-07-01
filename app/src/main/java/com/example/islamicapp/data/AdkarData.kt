@@ -1,8 +1,13 @@
 package com.example.islamicapp.data
 
-import android.content.Context
-import java.io.IOException
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-data class AdkarData(
-    val name: String
+@Serializable
+data class dikrData(
+    @SerialName("category") val category: String,
+    @SerialName("count") val count: String,
+    @SerialName("description") val description: String,
+    @SerialName("reference") val reference: String,
+    @SerialName("content") val content: String
 )

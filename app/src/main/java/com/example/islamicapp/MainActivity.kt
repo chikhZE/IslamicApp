@@ -43,7 +43,7 @@ fun myApp() {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Scaffold(
             bottomBar = {
-                if(currentRoute != "dikr_screen") BottomNavigationBar(navController)
+                if(currentRoute?.startsWith("dikr_screen") != true) BottomNavigationBar(navController)
             }
         ) { innerPadding ->
             NavHost(
@@ -62,9 +62,11 @@ fun myApp() {
                     )
 
                 }
-                composable("dikr_screen") {
+                composable("dikr_screen/{dikrName}") { backStackEntry  ->
+                    val encodedName = backStackEntry.arguments?.getString("dikrName") ?: ""
+                    val dikrName = java.net.URLDecoder.decode(encodedName, "UTF-8")
                     DikrScreen(
-                        Modifier.padding(innerPadding)
+                        dikrName,
                     )
                 }
             }
