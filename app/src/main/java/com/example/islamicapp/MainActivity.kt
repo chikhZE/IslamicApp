@@ -12,12 +12,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.islamicapp.data.AdkarViewModel
 import com.example.islamicapp.ui.AdkarScreen
+import com.example.islamicapp.ui.AllHadithScreen
 import com.example.islamicapp.ui.BottomNavigationBar
 import com.example.islamicapp.ui.DikrScreen
 import com.example.islamicapp.ui.HomeScreen
@@ -40,6 +42,7 @@ fun myApp() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val adkarViewModel: AdkarViewModel = viewModel()
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Scaffold(
             bottomBar = {
@@ -55,10 +58,16 @@ fun myApp() {
                         Modifier.padding(innerPadding)
                     )
                 }
+                composable("allhadith_screen") {
+                    AllHadithScreen(
+                        Modifier.padding(innerPadding)
+                    )
+                }
                 composable("adkar_screen") {
                     AdkarScreen(
                         navController,
-                        Modifier.padding(innerPadding)
+                        Modifier.padding(innerPadding),
+                        adkarViewModel
                     )
 
                 }
@@ -67,6 +76,8 @@ fun myApp() {
                     val dikrName = java.net.URLDecoder.decode(encodedName, "UTF-8")
                     DikrScreen(
                         dikrName,
+                        Modifier,
+                        adkarViewModel
                     )
                 }
             }

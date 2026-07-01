@@ -164,8 +164,15 @@ fun BottomNavigationBar(
             )
         )
         NavigationBarItem(
-            selected = false,
-            onClick = { },
+            selected = currentRoute == "allhadith_screen",
+            onClick = {
+                if(currentRoute != "allhadith_screen") {
+                    navController.navigate("allhadith_screen"){
+                        popUpTo("home_screen") { inclusive = false }
+                        launchSingleTop = true
+                    }
+                }
+            },
             icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null, tint = Color.White) },
             label = { Text("الأحاديث", color = Color.White, fontSize = 10.sp) },
             colors = NavigationBarItemDefaults.colors(

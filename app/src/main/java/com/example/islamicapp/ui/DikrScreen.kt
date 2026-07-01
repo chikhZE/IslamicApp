@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.NightsStay
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
@@ -39,11 +40,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.islamicapp.data.AdkarViewModel
+import com.example.islamicapp.data.categories
+import com.example.islamicapp.ui.theme.FirstColor
 import com.example.islamicapp.ui.theme.SecondColor
 import kotlinx.coroutines.flow.MutableStateFlow
-
-private val PurpleBar = Color(0xFF9154C1)
-private val ScreenBackground = Color(0xFFFCF9F4)
 private val GreenBar = Color(0xFF6ED05B)
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,7 +73,7 @@ fun DikrScreen(
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Icon(
-                                imageVector = Icons.Default.NightsStay,
+                                imageVector = categories.find { it.title == dikrName }?.icon ?: Icons.Default.Bedtime,
                                 contentDescription = null,
                                 tint = Color.White.copy(alpha = 0.7f),
                                 modifier = Modifier.size(32.dp)
@@ -81,7 +81,7 @@ fun DikrScreen(
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = SecondColor
+                        containerColor = FirstColor
                     )
                 )
             },
@@ -96,7 +96,8 @@ fun DikrScreen(
 
                     DikrItem(
                         text = dikr.content,
-                        count = dikr.count
+                        count = dikr.count,
+                        reference = dikr.reference
 
                     )
                 }
@@ -108,6 +109,7 @@ fun DikrScreen(
 fun DikrItem(
     text: String,
     count: String,
+    reference: String = ""
 ) {
     val context = LocalContext.current
     val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -138,14 +140,14 @@ fun DikrItem(
                         vibrator.vibrate(150)
                     }
                 }
-            , // Space for the green bar overlap
+            ,
             shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White),
             elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
         )
         {
             Text(
-                text = text,
+                text = "$text$reference",
                 modifier = Modifier
                     .padding(24.dp)
                     .fillMaxWidth(),
@@ -162,7 +164,7 @@ fun DikrItem(
                 .width(260.dp)
                 .height(40.dp),
             shape = RoundedCornerShape(20.dp),
-            color = GreenBar,
+            color = SecondColor,
             shadowElevation = 4.dp
         ) {
             Row(

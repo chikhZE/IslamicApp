@@ -30,12 +30,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.islamicapp.data.AdkarViewModel
+import com.example.islamicapp.data.categories
 import com.example.islamicapp.ui.theme.SecondColor
 
-data class AdkarCategory(
-    val title: String,
-    val icon: ImageVector
-)
+
 
 @Composable
 fun AdkarScreen(
@@ -45,16 +43,6 @@ fun AdkarScreen(
 
     ) {
     val categoriesList by adkarViewModel.categories.collectAsState()
-    val categories = listOf(
-        AdkarCategory("أذكار الصباح", Icons.Default.WbSunny),
-        AdkarCategory("أذكار المساء", Icons.Default.NightsStay),
-        AdkarCategory("أذكار بعد السلام من الصلاة المفروضة", Icons.Default.Mosque),
-        AdkarCategory("أذكار النوم", Icons.Default.Bedtime),
-        AdkarCategory("أذكار الاستيقاظ", Icons.Default.AccessAlarm),
-        AdkarCategory("أدعية قرآنية", Icons.AutoMirrored.Filled.MenuBook),
-        AdkarCategory("تسابيح", Icons.Default.Money),
-        AdkarCategory("أدعية الأنبياء", Icons.Default.Flare),
-        )
 
     Column(
         modifier = modifier
@@ -80,9 +68,11 @@ fun AdkarScreen(
             items(categoriesList) { categoryName ->
                 val matchingIcon = categories.find { it.title == categoryName }?.icon ?: Icons.Default.Bedtime
                 AdkarItem(
-                    navController,
                     categoryName,
                     matchingIcon,
+                    {
+                        val encodedTitle = Uri.encode(categoryName)
+                        navController.navigate("dikr_screen/$encodedTitle")}
                 )
             }
         }
@@ -91,9 +81,9 @@ fun AdkarScreen(
 
 @Composable
 fun AdkarItem(
-    navController: NavHostController,
     title: String = "أذكار الصباح",
     icon: ImageVector,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -102,8 +92,7 @@ fun AdkarItem(
             .height(64.dp)
             .padding(1.dp)
             .clickable(true) {
-                val encodedTitle = Uri.encode(title)
-                navController.navigate("dikr_screen/$encodedTitle")
+                onClick()
             },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
