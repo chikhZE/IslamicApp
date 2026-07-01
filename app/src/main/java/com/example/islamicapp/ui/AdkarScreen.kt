@@ -120,10 +120,3 @@ fun AdkarItem(
         }
     }
 }
-/*
-@Preview(showBackground = true)
-@Composable
-fun AdkarScreenPreview() {
-    AdkarScreen()
-}
-*/

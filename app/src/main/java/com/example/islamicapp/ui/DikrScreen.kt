@@ -62,22 +62,23 @@ fun DikrScreen(
                     title = {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.End,
                             modifier = Modifier.fillMaxWidth().padding(end = 16.dp)
                         ) {
-                            Text(
-                                dikrName,
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 20.sp
-                            )
-                            Spacer(modifier = Modifier.width(12.dp))
                             Icon(
                                 imageVector = categories.find { it.title == dikrName }?.icon ?: Icons.Default.Bedtime,
                                 contentDescription = null,
                                 tint = Color.White.copy(alpha = 0.7f),
                                 modifier = Modifier.size(32.dp)
                             )
+                            Spacer(modifier = Modifier.width(12.dp))
+
+                            Text(
+                                dikrName,
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )
+
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -241,10 +242,3 @@ fun DikrItem(
         }
     }
 }
-/*
-@Preview(showBackground = true)
-@Composable
-fun DikrScreenPreview() {
-    DikrScreen()
-}
-*/

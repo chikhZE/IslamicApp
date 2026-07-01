@@ -66,8 +66,13 @@ fun myApp() {
                         Modifier.padding(innerPadding)
                     )
                 }
-                composable("hadith_screen") {
-                    HadithScreen()
+                composable("hadith_screen/{hadithNum}") { backStackEntry ->
+                    val hadithNum = backStackEntry.arguments?.getString("hadithNum") ?: "1"
+
+                    HadithScreen(
+                        hadithNum,
+                        navController
+                    )
                 }
                 composable("adkar_screen") {
                     AdkarScreen(

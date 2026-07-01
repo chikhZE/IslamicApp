@@ -11,6 +11,8 @@ import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.FormatQuote
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,39 +21,39 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.islamicapp.data.AdkarViewModel
 import com.example.islamicapp.ui.theme.FirstColor
 import com.example.islamicapp.ui.theme.SecondColor
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(
-    showBackground = true,
-    showSystemUi = true,
-)
 @Composable
 fun HadithScreen(
     hadithNumber: String = "1",
-    //navController: NavHostController,
-    modifier: Modifier = Modifier
-) {
-    val dummyHadithText = "«إنَّما الأعْمالُ بالنِّيّاتِ، وإنَّما لِكُلِّ امْرِئٍ ما نَوى، فمَن كانَتْ هِجْرَتُهُ إلى اللَّهِ ورَسولِهِ، فهِجْرَتُهُ إلى اللَّهِ ورَسولِهِ، ومَن كانَت *هنا يوضع نص الحديث الكامل عند ربطه باللوجيك*»"
-    val dummyHadithRawy = "رواه البخاري ومسلم عن أمير المؤمنين عمر بن الخطاب رضي الله عنه."
-    val dummyExplanationText = "هذا النص عبارة عن شرح وهمي مؤقت. هنا سيتم عرض الشرح التفصيلي للحديث الشريف المستخرج من كتاب الأربعين النووية، حيث يتناول الفوائد الفقهية، معاني المفردات الغامضة، وما يرشد إليه الحديث من أحكام تربوية وإيمانية تساعد المستخدم على فهم عمق الحديث الشريف وتطبيقه في حياته اليومية."
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+    adkarViewModel: AdkarViewModel = viewModel(),
+
+    ) {
+    val hadithList by adkarViewModel.allHadithList.collectAsState()
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "الحديث رقم $hadithNumber",
+                        text = "الحديث رقم ${(hadithNumber.toInt() +1)}",
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "رجوع",
@@ -94,7 +96,7 @@ fun HadithScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = dummyHadithText,
+                        text = hadithList[hadithNumber.toInt()].hadith,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color(0xFF2B2B2B),
@@ -127,7 +129,7 @@ fun HadithScreen(
                 }
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = "شرح الحديث وتوجيهه",
+                    text = "شرح الحديث",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                 )
@@ -140,7 +142,7 @@ fun HadithScreen(
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
                 Text(
-                    text = dummyExplanationText,
+                    text = hadithList[hadithNumber.toInt()].description,
                     fontSize = 16.sp,
                     color = Color(0xFF444444),
                     textAlign = TextAlign.Justify,

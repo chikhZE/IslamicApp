@@ -26,10 +26,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.islamicapp.data.AdkarViewModel
 
-@Preview(
-    showSystemUi = true,
-    showBackground = true,
-)
 @Composable
 fun AllHadithScreen(
     navController: NavHostController,
@@ -65,7 +61,7 @@ fun AllHadithScreen(
                     "الحديث رقم : ${(index + 1).toString()}",
                     Icons.AutoMirrored.Default.Article,
                     {
-                        navController.navigate("hadith_screen")
+                        navController.navigate("hadith_screen/${index.toString()}")
                     }
                 )
             }
