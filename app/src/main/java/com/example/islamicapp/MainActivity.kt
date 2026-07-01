@@ -22,6 +22,7 @@ import com.example.islamicapp.ui.AdkarScreen
 import com.example.islamicapp.ui.AllHadithScreen
 import com.example.islamicapp.ui.BottomNavigationBar
 import com.example.islamicapp.ui.DikrScreen
+import com.example.islamicapp.ui.HadithScreen
 import com.example.islamicapp.ui.HomeScreen
 import com.example.islamicapp.ui.theme.IslamicAppTheme
 
@@ -46,7 +47,8 @@ fun myApp() {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Scaffold(
             bottomBar = {
-                if(currentRoute?.startsWith("dikr_screen") != true) BottomNavigationBar(navController)
+                if(currentRoute?.startsWith("dikr_screen") != true && currentRoute?.startsWith("hadith_screen") != true ) BottomNavigationBar(navController)
+
             }
         ) { innerPadding ->
             NavHost(
@@ -60,8 +62,12 @@ fun myApp() {
                 }
                 composable("allhadith_screen") {
                     AllHadithScreen(
+                        navController,
                         Modifier.padding(innerPadding)
                     )
+                }
+                composable("hadith_screen") {
+                    HadithScreen()
                 }
                 composable("adkar_screen") {
                     AdkarScreen(

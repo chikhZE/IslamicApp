@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.islamicapp.data.AdkarViewModel
 
 @Preview(
@@ -31,7 +32,7 @@ import com.example.islamicapp.data.AdkarViewModel
 )
 @Composable
 fun AllHadithScreen(
-    //navController: NavHostController,
+    navController: NavHostController,
     modifier: Modifier = Modifier,
     adkarViewModel: AdkarViewModel = viewModel(),
 
@@ -63,7 +64,9 @@ fun AllHadithScreen(
                 AdkarItem(
                     "الحديث رقم : ${(index + 1).toString()}",
                     Icons.AutoMirrored.Default.Article,
-                    {}
+                    {
+                        navController.navigate("hadith_screen")
+                    }
                 )
             }
         }
