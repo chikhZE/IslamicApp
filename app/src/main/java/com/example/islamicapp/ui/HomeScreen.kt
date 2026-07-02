@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,11 +33,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.islamicapp.data.ayahHomeScreen
 import com.example.islamicapp.data.duaHomeScreen
+import com.example.islamicapp.data.getCurrentIslamicDate
 import com.example.islamicapp.data.hadithHomeScreen
 import com.example.islamicapp.ui.theme.FirstColor
 import com.example.islamicapp.ui.theme.SecondColor
@@ -50,6 +51,7 @@ fun HomeScreen(
     val currentAyah by rememberSaveable { mutableStateOf(ayahHomeScreen[kotlin.random.Random(currentDayOfYear).nextInt(ayahHomeScreen.size)]) }
     val currentHadith by rememberSaveable { mutableStateOf(hadithHomeScreen[kotlin.random.Random(currentDayOfYear+1).nextInt(hadithHomeScreen.size)]) }
     val currentDuaa by rememberSaveable { mutableStateOf(duaHomeScreen[kotlin.random.Random(currentDayOfYear+2).nextInt(duaHomeScreen.size)]) }
+    val currentHijriDate = remember { getCurrentIslamicDate() }
 
             Column(
                 modifier = modifier
@@ -70,7 +72,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "السبت 11 محرم 1448",
+                    text = currentHijriDate,
                     fontSize = 16.sp,
                     modifier = Modifier.fillMaxWidth()
                 )

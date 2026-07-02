@@ -12,6 +12,10 @@ import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.time.chrono.HijrahDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DecimalStyle
+import java.util.Locale
 
 @Serializable
 data class dikrData(
@@ -41,3 +45,8 @@ val categories = listOf(
     AdkarCategory("تسابيح", Icons.Default.Money),
     AdkarCategory("أدعية الأنبياء", Icons.Default.Flare),
 )
+
+fun getCurrentIslamicDate(): String {
+    val hijriDate = HijrahDate.now()
+    return hijriDate.format(DateTimeFormatter.ofPattern("d MMMM yyyy G", Locale("ar")))
+}
