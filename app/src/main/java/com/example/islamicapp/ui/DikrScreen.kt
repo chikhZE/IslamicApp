@@ -98,7 +98,7 @@ fun DikrScreen(
                     DikrItem(
                         text = dikr.content,
                         count = dikr.count,
-                        reference = dikr.reference
+                        reference = dikr.reference,
 
                     )
                 }
@@ -110,8 +110,11 @@ fun DikrScreen(
 fun DikrItem(
     text: String,
     count: String,
-    reference: String = ""
-) {
+    reference: String = "",
+    modifier: Modifier = Modifier,
+    adkarViewModel: AdkarViewModel = viewModel(),
+
+    ) {
     val context = LocalContext.current
     val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         val manager = context.getSystemService(VibratorManager::class.java)
@@ -129,11 +132,14 @@ fun DikrItem(
     ) {
         var countNum by rememberSaveable {mutableStateOf(count.toInt()) }
         Card(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(bottom = 20.dp)
                 .clickable(true) {
-                    if(countNum >0) countNum--
+                    if(countNum >0) {
+                        countNum--
+                        adkarViewModel.incrementAzkarCount()
+                    }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         vibrator.vibrate(VibrationEffect.createOneShot(150, VibrationEffect.DEFAULT_AMPLITUDE))
                     } else {

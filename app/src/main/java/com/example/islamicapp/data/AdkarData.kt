@@ -10,6 +10,8 @@ import androidx.compose.material.icons.filled.Mosque
 import androidx.compose.material.icons.filled.NightsStay
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.chrono.HijrahDate
@@ -50,3 +52,9 @@ fun getCurrentIslamicDate(): String {
     val hijriDate = HijrahDate.now()
     return hijriDate.format(DateTimeFormatter.ofPattern("d MMMM yyyy G", Locale("ar")))
 }
+@Entity(tableName = "azkar_count")
+data class AzkarCounter(
+    @PrimaryKey
+    val id: Int = 1,
+    val count: Int
+)

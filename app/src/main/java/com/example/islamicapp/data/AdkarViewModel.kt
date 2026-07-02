@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.json.JSONObject
@@ -17,6 +18,19 @@ class AdkarViewModel(application: Application): AndroidViewModel(application) {
 
     private val _allHadithList = MutableStateFlow<List<hadithData>>(emptyList())
     val allHadithList: StateFlow<List<hadithData>> = _allHadithList
+
+    private val dao = AppDatabase.getDatabase(application).counterDao()
+
+    val azkarCounterFlow = dao.getCounter()
+
+    fun incrementAzkarCount() {
+        viewModelScope.launch {
+            val current = dao.getCounter().first()?.count?:0
+            dao.updateCounter(
+                AzkarCounter(id = 1, count = current + 1)
+            )
+        }
+    }
 
     fun getDikr() {
         viewModelScope.launch {
@@ -55,4 +69,6 @@ class AdkarViewModel(application: Application): AndroidViewModel(application) {
         getHadith()
 
     }
+
+
 }

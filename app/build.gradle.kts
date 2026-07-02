@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
+    id("com.google.devtools.ksp")
 
 
 }
@@ -59,6 +60,11 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+
+    val room_version = "2.8.4"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
 
 
 

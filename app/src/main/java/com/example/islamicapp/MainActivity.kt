@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -63,7 +64,8 @@ fun myApp() {
                 composable("allhadith_screen") {
                     AllHadithScreen(
                         navController,
-                        Modifier.padding(innerPadding)
+                        Modifier.padding(innerPadding),
+                        adkarViewModel
                     )
                 }
                 composable("hadith_screen/{hadithNum}") { backStackEntry ->
@@ -71,7 +73,9 @@ fun myApp() {
 
                     HadithScreen(
                         hadithNum,
-                        navController
+                        navController,
+                        Modifier,
+                        adkarViewModel
                     )
                 }
                 composable("adkar_screen") {

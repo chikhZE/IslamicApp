@@ -1,40 +1,60 @@
 package com.example.islamicapp.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.islamicapp.data.AdkarViewModel
 import com.example.islamicapp.data.ayahHomeScreen
 import com.example.islamicapp.data.duaHomeScreen
 import com.example.islamicapp.data.getCurrentIslamicDate
@@ -45,13 +65,19 @@ import com.example.islamicapp.ui.theme.SecondColor
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier
-) {
+    modifier: Modifier = Modifier,
+    adkarViewModel: AdkarViewModel = viewModel(),
+
+    ) {
     val currentDayOfYear = java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_YEAR)
     val currentAyah by rememberSaveable { mutableStateOf(ayahHomeScreen[kotlin.random.Random(currentDayOfYear).nextInt(ayahHomeScreen.size)]) }
     val currentHadith by rememberSaveable { mutableStateOf(hadithHomeScreen[kotlin.random.Random(currentDayOfYear+1).nextInt(hadithHomeScreen.size)]) }
     val currentDuaa by rememberSaveable { mutableStateOf(duaHomeScreen[kotlin.random.Random(currentDayOfYear+2).nextInt(duaHomeScreen.size)]) }
+
     val currentHijriDate = remember { getCurrentIslamicDate() }
+
+    val databaseCounterState by adkarViewModel.azkarCounterFlow.collectAsState(initial = null)
+    val totalGlobalCount = databaseCounterState?.count ?: 0
 
             Column(
                 modifier = modifier
@@ -70,12 +96,26 @@ fun HomeScreen(
                 )
                 
                 Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = currentHijriDate,
+                        fontSize = 16.sp,
+                    )
+                    Text(
+                        text = "مجموع الأذكار المقروءة: ${totalGlobalCount}",
+                        fontSize = 16.sp,
+                        modifier = Modifier
+                            .background(SecondColor, RoundedCornerShape(16.dp))
+                            .padding(8.dp),
+                        color = Color.White
+                    )
+                }
 
-                Text(
-                    text = currentHijriDate,
-                    fontSize = 16.sp,
-                    modifier = Modifier.fillMaxWidth()
-                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -97,10 +137,16 @@ fun HomeScreen(
                     title = "دعاء اليوم",
                     content = currentDuaa
                 )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
             }
 
 
 }
+
+
 
 @Composable
 fun InfoCard(title: String, content: String) {
