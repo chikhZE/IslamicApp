@@ -20,23 +20,26 @@ import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 
-@Preview(showBackground = true, showSystemUi = true)
+//@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun SettingScreen(
-    modifier:Modifier = Modifier
+    modifier:Modifier = Modifier,
+    currentMode: String,
+    onModeSelected: (String) -> Unit
 ) {
+    val modes = listOf(
+        "light" to Icons.Default.LightMode,
+        "dark" to Icons.Default.DarkMode,
+        "system" to Icons.Default.Settings
+    )
+
     Column(
         modifier = modifier
             .padding(16.dp)
@@ -53,48 +56,42 @@ fun SettingScreen(
         )
 
         Spacer(modifier = Modifier.height(28.dp))
-        SettingCard()
+
+        Card()
+        {
+            Row(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "لون الشاشة:"
+                )
+                SingleChoiceSegmentedButtonRow {
+                    modes.forEachIndexed {index, (key, label) ->
+                        SegmentedButton(
+                            shape = SegmentedButtonDefaults.itemShape(
+                                index = index,
+                                count = modes.size
+                            ),
+                            onClick = {onModeSelected(key)},
+                            selected = key == currentMode,
+                            label = {
+                                Icon(
+                                    imageVector = label,
+                                    contentDescription = null,
+                                )
+                            }
+                        )
+                    }
+                }
+            }
+        }
         Spacer(Modifier.height(8.dp))
 
     }
 }
 
 
-@Preview
-@Composable
-fun SettingCard() {
-    var selectedIndex by remember { mutableIntStateOf(0) }
-    val options = listOf(Icons.Default.LightMode, Icons.Default.DarkMode, Icons.Default.Settings)
-    Card() {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "لون الشاشة:"
-            )
-            SingleChoiceSegmentedButtonRow {
-                options.forEachIndexed { index, label ->
-                    SegmentedButton(
-                        shape = SegmentedButtonDefaults.itemShape(
-                            index = index,
-                            count = options.size
-                        ),
-                        onClick = { selectedIndex = index },
-                        selected = index == selectedIndex,
-                        label = {
-                            Icon(
-                                imageVector = label,
-                                contentDescription = null,
-                            )
-                        }
-                    )
-                }
-            }
-        }
-    }
-
-}

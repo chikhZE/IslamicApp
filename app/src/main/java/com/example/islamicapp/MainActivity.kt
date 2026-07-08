@@ -4,21 +4,24 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.islamicapp.data.AdkarViewModel
+import com.example.islamicapp.data.ThemeManager
 import com.example.islamicapp.ui.AdkarScreen
 import com.example.islamicapp.ui.AllHadithScreen
 import com.example.islamicapp.ui.BottomNavigationBar
@@ -27,21 +30,39 @@ import com.example.islamicapp.ui.HadithScreen
 import com.example.islamicapp.ui.HomeScreen
 import com.example.islamicapp.ui.SettingScreen
 import com.example.islamicapp.ui.theme.IslamicAppTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val themeManager = ThemeManager(this)
         setContent {
-            IslamicAppTheme {
-                myApp()
+            val themeMode by themeManager.themeModeFlow.collectAsState(initial = "system")
+            val useDarkTheme = when (themeMode) {
+                "light" -> false
+                "dark" -> true
+                else -> isSystemInDarkTheme()
+            }
+            IslamicAppTheme(darkTheme = useDarkTheme) {
+                myApp(
+                    currentMode = themeMode,
+                    onModeSelected = { newMode ->
+                        lifecycleScope.launch {
+                            themeManager.saveThemeMode(newMode)
+                        }
+                    }
+                )
             }
         }
     }
 }
 
 @Composable
-fun myApp() {
+fun myApp(
+    currentMode: String,
+    onModeSelected: (String) -> Unit
+) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -98,7 +119,10 @@ fun myApp() {
                 }
                 composable("setting_screen") {
                     SettingScreen(
-                        Modifier.padding(innerPadding)
+                        Modifier.padding(innerPadding),
+                        currentMode,
+                        onModeSelected
+
                     )
                 }
             }
