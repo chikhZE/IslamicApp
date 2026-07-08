@@ -1,6 +1,7 @@
 package com.example.islamicapp.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -139,8 +140,6 @@ fun HomeScreen(
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
-
-
             }
 
 
@@ -187,8 +186,15 @@ fun BottomNavigationBar(
         tonalElevation = 8.dp
     ) {
         NavigationBarItem(
-            selected = false,
-            onClick = {},
+            selected = currentRoute == "setting_screen",
+            onClick = {
+                if(currentRoute != "setting_screen") {
+                    navController.navigate("setting_screen"){
+                        popUpTo("home_screen") { inclusive = false }
+                        launchSingleTop = true
+                    }
+                }
+            },
             icon = { Icon(Icons.Default.Settings, contentDescription = null, tint = Color.White) },
             label = { Text("الإعدادات", color = Color.White, fontSize = 10.sp) },
             colors = NavigationBarItemDefaults.colors(

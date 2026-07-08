@@ -25,6 +25,7 @@ import com.example.islamicapp.ui.BottomNavigationBar
 import com.example.islamicapp.ui.DikrScreen
 import com.example.islamicapp.ui.HadithScreen
 import com.example.islamicapp.ui.HomeScreen
+import com.example.islamicapp.ui.SettingScreen
 import com.example.islamicapp.ui.theme.IslamicAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -93,6 +94,11 @@ fun myApp() {
                         dikrName,
                         Modifier,
                         adkarViewModel
+                    )
+                }
+                composable("setting_screen") {
+                    SettingScreen(
+                        Modifier.padding(innerPadding)
                     )
                 }
             }
